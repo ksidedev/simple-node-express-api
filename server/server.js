@@ -14,35 +14,36 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 app.use(express.static("build"));
+// Accept Cross Origin Requests
+app.use(cors());
+
 
 // Use body parser and send an error if there are any errors, like SyntaxError
 const addRawBody = (req, res, buf) => {
-    req.rawBody = buf.toString();
+  req.rawBody = buf.toString();
 };
 
 app.use((req, res, next) => {
     bodyParser.json({
-        verify: addRawBody,
+      verify: addRawBody,
     })(req, res, error => {
         if (error && error instanceof SyntaxError) {
-            console.log(error);
-            return res.status(400).send("There are some syntax errors in the data received");
+          console.log(error);
+          return res.status(400).send("There are some syntax errors in the data received");
         }
         if (error) {
-            console.log(error);
-            return res.sendStatus(400);
+          console.log(error);
+          return res.sendStatus(400);
         }
         next();
     });
 });
 
+
+
 app.get("/", (req, res) => {
-    res.send("Welcome to the simple Node server!");
+  res.send("Welcome to the simple Node server!");
 });
-
-// Accept Cross Origin Requests
-app.use(cors());
-
 
 app.post("/post", (request, response) => {
     // Validate the properties before creating and sending the message.
@@ -53,35 +54,35 @@ app.post("/post", (request, response) => {
     };
 
     const validationResultFormatted = validationResult.withDefaults({
-        formatter: ({ value, msg, nestedErrors }) => (
-            {
-                value, msg, nestedErrors
-            }
-        )
+      formatter: ({ value, msg, nestedErrors }) => (
+        {
+          value, msg, nestedErrors
+        }
+      )
     });
      
     try {
-        console.log(request.body);
-        const errors = validationResultFormatted(request);
-        if (!errors.isEmpty()) {
-            return response.status(400).json({ errors: errors.mapped() });
-        }
+      console.log(request.body);
+      const errors = validationResultFormatted(request);
+      if (!errors.isEmpty()) {
+        return response.status(400).json({ errors: errors.mapped() });
+      }
 
-        const props = request.body;
-        const fromServer = data;
-        const dateFromServer = moment();
-        response.send({
-            props,
-            DataFromServer: fromServer,
-            date: dateFromServer
-        });
+      const props = request.body;
+      const fromServer = data;
+      const dateFromServer = moment();
+      response.send({
+        props,
+        DataFromServer: fromServer,
+        date: dateFromServer
+      });
     } catch (error) {
-        console.log(error);
-        if (error.name === "TypeError") {
-            return response.status(400).send("There was a problem");
-        } else {
-            return response.status(400).send("An error has occured");
-        }
+      console.log(error);
+      if (error.name === "TypeError") {
+        return response.status(400).send("There was a problem");
+      } else {
+        return response.status(400).send("An error has occured");
+      }
     }
 });
 

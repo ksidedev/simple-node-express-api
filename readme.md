@@ -19,6 +19,9 @@ http://localhost:3001
 
 ##### Post
 --
+http://localhost:3001/post
+
+Body: 
 ```
 { 
 	"name": "Foo",
