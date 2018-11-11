@@ -25,7 +25,6 @@ Body:
 ```
 { 
 	"name": "Foo",
-	"job": "Developer",
-	"Description": "This is the description"
+	"job": "Developer"
 }
 ```

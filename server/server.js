@@ -5,7 +5,8 @@ const express = require('express');
 const socketIO = require('socket.io');
 const moment = require('moment');
 var bodyParser = require('body-parser');
-const { body, validationResult } = require("express-validator/check");
+const { propsValidator, validationResultFormatted } = require("./propsValidator");
+
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3001;
@@ -16,7 +17,6 @@ var io = socketIO(server);
 app.use(express.static("build"));
 // Accept Cross Origin Requests
 app.use(cors());
-
 
 // Use body parser and send an error if there are any errors, like SyntaxError
 const addRawBody = (req, res, buf) => {
@@ -39,6 +39,7 @@ app.use((req, res, next) => {
     });
 });
 
+app.use(propsValidator)
 
 
 app.get("/", (req, res) => {
@@ -50,31 +51,19 @@ app.post("/post", (request, response) => {
     const dataTorespond = {
       name: 'Name was received',
       job: 'Developer. Well done!',
-      Description: 'You\'re getting this frin the server'
+      Description: 'You\'re getting this from the server'
     };
 
-    const validationResultFormatted = validationResult.withDefaults({
-      formatter: ({ value, msg, nestedErrors }) => (
-        {
-          value, msg, nestedErrors
-        }
-      )
-    });
-     
     try {
       console.log(request.body);
       const errors = validationResultFormatted(request);
       if (!errors.isEmpty()) {
-        return response.status(400).json({ errors: errors.mapped() });
+          return response.status(400).json({ errors: errors.mapped() });
       }
 
-      const props = request.body;
       const fromServer = dataTorespond;
-      const dateFromServer = moment();
       response.send({
-        props,
         DataFromServer: fromServer,
-        date: dateFromServer
       });
     } catch (error) {
       console.log(error);
