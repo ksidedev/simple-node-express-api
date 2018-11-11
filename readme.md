@@ -20,9 +20,9 @@ http://localhost:3001
 ##### Post
 --
 ```
-{
-  "name": 'Foo',
-  "job": 'Developer',
-  "Description": 'This is the description'
+{ 
+	"name": "Foo",
+  	"job": "Developer",
+  	"Description": "This is the description"
 }
 ```
