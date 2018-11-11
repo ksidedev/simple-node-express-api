@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 
 app.post("/post", (request, response) => {
     // Validate the properties before creating and sending the message.
-    const data = {
+    const dataTorespond = {
       name: 'Name was received',
       job: 'Developer. Well done!',
       Description: 'You\'re getting this frin the server'
@@ -69,7 +69,7 @@ app.post("/post", (request, response) => {
       }
 
       const props = request.body;
-      const fromServer = data;
+      const fromServer = dataTorespond;
       const dateFromServer = moment();
       response.send({
         props,
