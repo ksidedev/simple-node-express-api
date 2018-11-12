@@ -19,26 +19,7 @@ app.use(express.static("build"));
 app.use(cors());
 
 // Use body parser and send an error if there are any errors, like SyntaxError
-const addRawBody = (req, res, buf) => {
-  req.rawBody = buf.toString();
-};
-
-app.use((req, res, next) => {
-    bodyParser.json({
-      verify: addRawBody,
-    })(req, res, error => {
-        if (error && error instanceof SyntaxError) {
-          console.log(error);
-          return res.status(400).send("There are some syntax errors in the data received");
-        }
-        if (error) {
-          console.log(error);
-          return res.sendStatus(400);
-        }
-        next();
-    });
-});
-
+app.use(bodyParser.json())
 app.use(propsValidator)
 
 
